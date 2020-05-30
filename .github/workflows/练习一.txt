@@ -1,0 +1,54 @@
+
+ 
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+ 
+/**
+ * @author lys
+ * @date 2020/02/04
+ */
+public class WordsOfEqualChars {
+ 
+    public static void main(String[] args) throws IOException {
+        //获取url地址
+        URL url = new URL("http://wiki.puzzlers.org/pub/wordlists/unixdict.txt");
+        //以流的形式存储上述url里的内容
+        InputStreamReader inputStream = new InputStreamReader(url.openStream());
+        //用bufferd 一行一行读取字符
+        BufferedReader reader = new BufferedReader(inputStream);
+        //每行读取到的单词
+        String word;
+        //用于存放相同字母异序词的集合
+        Map<String, Collection> map = new HashMap<>();
+ 
+        //找到最大的集合里的数组长度
+        int maxCount = 0;
+ 
+        while ((word = reader.readLine()) != null) {
+ 
+            char[] chars = word.toLowerCase().toCharArray();
+            //对字符排序，以确定是否是同字母异序
+            Arrays.sort(chars);
+            String orderString = new String(chars);
+ 
+            if (!map.containsKey(orderString)) {
+                map.put(orderString, new ArrayList());
+            }
+            Collection collection = map.get(orderString);
+            collection.add(word);
+ 
+            //找打最大的集合对比
+            maxCount = collection.size() > maxCount ? collection.size() : maxCount;
+ 
+        }
+        //关闭流，容易忘记的地方
+        reader.close();
+        for (String s : map.keySet()) {
+            Collection collection = map.get(s);
+            if (collection.size() >= maxCount) {
+                System.out.println(collection.toString());
+            }
+        }
+    }
+}
